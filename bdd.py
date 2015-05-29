@@ -1,4 +1,4 @@
-"BDDs with global rank and memo-tables." # derived from bdd5.py
+"BDDs with global rank and memo-tables."
 
 from utils import memoize
 
