@@ -83,7 +83,7 @@ bdd.pp(bdd.choose(tmp, bdd.lit0, tmp))
 collectgarbage("collect")
 local pre_clock, pre_mem = os.clock(), collectgarbage("count")
 test_nqueens(10)
--- choose_memo = {}; collectgarbage("collect")
+-- bdd.clear_choose_memos(); collectgarbage("collect")
 local post_clock, post_mem = os.clock(), collectgarbage("count")
 print(string.format("%.3f seconds, %.3f kb RAM",
                     post_clock - pre_clock, post_mem - pre_mem))

@@ -179,6 +179,12 @@ local function make_variable(rank)
    return build_choice(rank, lit0, lit1)
 end
 
+local function clear_choose_memos()
+   for k in pairs(choose_memo) do
+      choose_memo[k] = nil
+   end
+end
+
 return {
    lit0 = lit0,
    lit1 = lit1,
@@ -191,4 +197,5 @@ return {
    match = match,
    pp = pp,
    choose = do_choose,
+   clear_choose_memos = clear_choose_memos,
 }
