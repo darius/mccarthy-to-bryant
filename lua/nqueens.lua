@@ -2,7 +2,7 @@ local dbg = require 'dbg'
 local printf = dbg.printf
 local log = dbg.log
 
-local bdd = require 'bdd1'
+local bdd = require 'bdd2'
 
 local function queen(n, qrow, qcol)
    return n*(qrow-1) + qcol
@@ -78,7 +78,7 @@ end
 
 local tmp = place_queen(1, 1, 1)
 bdd.pp(tmp)
-bdd.pp(tmp.choose(bdd.lit0, tmp))
+bdd.pp(bdd.choose(tmp, bdd.lit0, tmp))
 
 collectgarbage("collect")
 local pre_clock, pre_mem = os.clock(), collectgarbage("count")

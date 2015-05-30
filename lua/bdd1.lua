@@ -193,4 +193,5 @@ return {
    bdd_or = bdd_or,
    match = match,
    pp = pp,
+   choose = function(node, if0, if1) return node.choose(if0, if1) end
 }
