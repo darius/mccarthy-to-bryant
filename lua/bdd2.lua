@@ -112,7 +112,6 @@ local function do_choose(node, if0, if1)
 end
 
 local function subst(rank, replacement, node)
-   local result
    if     rank <  node.rank then return node
    elseif rank == node.rank then return do_choose(replacement, node.if0, node.if1)
    else                          return make_choice(node.rank,
