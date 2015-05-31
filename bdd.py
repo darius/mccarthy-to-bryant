@@ -3,6 +3,7 @@
 from utils import memoize
 
 num_terminals = 2
+optimize = True
 
 class Node(object):
     "A BDD node."
@@ -26,8 +27,6 @@ lit0, lit1 = the_constants[:2]
 
 def Variable(rank):
     return build_node(rank, the_constants)
-
-optimize = 1
 
 class ChoiceNode(Node):
     def __init__(self, rank, branches):
