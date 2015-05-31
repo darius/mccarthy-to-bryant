@@ -23,7 +23,6 @@ def Variable(rank):
     return Choice(rank, the_constants)
 
 optimize = 1
-optimize2 = 0 and len(the_constants) == 2
 
 class ChoiceNode(Node):
     def __init__(self, rank, branches):
@@ -34,13 +33,6 @@ class ChoiceNode(Node):
         if optimize: # (optional optimization)
             if len(set(branches)) == 1: return branches[0]
             if branches == the_constants: return self
-        if optimize2: # (optional optimization; seems bad, though)
-            if branches[0] is lit0:
-                if id(branches[1]) < id(self):
-                    self, branches = branches[1], (branches[0], self)
-            elif branches[1] is lit1:
-                if id(branches[0]) < id(self):
-                    self, branches = branches[0], (self, branches[1])
         return build(self, branches)
     def evaluate(self, env):
         return self.branches[env[self.rank]].evaluate(env)
@@ -64,8 +56,6 @@ def map_subst(rank, replacement, nodes):
 def subst(rank, replacement, node):
     if   rank <  node.rank: return node   # N.B. we get here if node is a ConstantNode
     elif rank == node.rank: return replacement(*node.branches)
-#    else:                   return node(*map_subst(rank, replacement, node.branches))
-    # XXX why did the above commented-out line work? At least in my testing?
     else:                   return make_node(node.rank,
                                              map_subst(rank, replacement, node.branches))
 
