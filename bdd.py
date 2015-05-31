@@ -9,8 +9,11 @@ class Node(object):
     __or__     = lambda self, other: self(other, lit1)
     __xor__    = lambda self, other: self(other, ~other)
 
+def Equiv(p, q):   return p(~q, q)
+def Implies(p, q): return p(lit1, q)
+
 class ConstantNode(Node):
-    rank = float('Inf')
+    rank = float('Inf')  # Greater than every variable.
     def __init__(self, value):     self.value = value
     def __call__(self, *branches): return branches[self.value]
     def evaluate(self, env):       return self.value
@@ -76,10 +79,6 @@ def satisfy(node, goal):
         else:
             return None
     return env if node.value == goal else None
-
-
-def Implies(p, q): return p(lit1, q)
-def Equiv(p, q):   return p(~q, q)
 
 
 ## x, y = map(Variable, (8, 9))
