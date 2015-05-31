@@ -23,7 +23,7 @@ Constant = the_constants.__getitem__
 
 def Variable(rank):
     assert rank < ConstantNode.rank
-    return Choice(rank, the_constants)
+    return build_node(rank, the_constants)
 
 optimize = 1
 
@@ -36,14 +36,14 @@ class ChoiceNode(Node):
         if optimize: # (optional optimization)
             if len(set(branches)) == 1: return branches[0]
             if branches == the_constants: return self
-        return build(self, branches)
+        return build_choice(self, branches)
     def evaluate(self, env):
         return self.branches[env[self.rank]].evaluate(env)
 
-Choice = memoize(ChoiceNode)
+build_node = memoize(ChoiceNode)
 
 @memoize
-def build(node, branches):
+def build_choice(node, branches):
     top = min(node.rank, *[b.rank for b in branches])
     sbranches = tuple(subst(top, c, node)(*map_subst(top, c, branches))
                       for c in the_constants)
@@ -51,7 +51,7 @@ def build(node, branches):
 
 def make_node(rank, branches):
     if len(set(branches)) == 1: return branches[0]
-    return Choice(rank, branches)
+    return build_node(rank, branches)
 
 def map_subst(rank, replacement, nodes):
     return [subst(rank, replacement, e) for e in nodes]
@@ -62,8 +62,8 @@ def subst(rank, replacement, node):
     else:                   return make_node(node.rank,
                                              map_subst(rank, replacement, node.branches))
 
-def is_valid(claim):
-    return satisfy(claim, 0) is None
+def is_valid(node):
+    return satisfy(node, 0) is None
 
 def satisfy(node, goal):
     """Return the lexicographically first env such that
