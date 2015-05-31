@@ -31,7 +31,7 @@ class ChoiceNode(Node):
     def __init__(self, rank, branches):
         self.rank = rank
         self.branches = branches
-        for b in branches: assert self.rank < b.rank
+        for b in branches: assert rank < b.rank
     def __call__(self, *branches):
         if optimize: # (optional optimization)
             if len(set(branches)) == 1: return branches[0]
