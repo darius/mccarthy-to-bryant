@@ -88,8 +88,8 @@ local function evaluate(node, env)
       return value
    else
       local value = env[node.rank]
-      if     value == 0 then return node.if0
-      elseif value == 1 then return node.if1
+      if     value == 0 then return evaluate(node.if0, env)
+      elseif value == 1 then return evaluate(node.if1, env)
       else assert(false) end
    end
 end

@@ -93,8 +93,8 @@ local function build_choice(rank, if0, if1)
 
    local function evaluate(env)
       local value = env[rank]
-      if     value == 0 then return if0
-      elseif value == 1 then return if1
+      if     value == 0 then return if0.evaluate(env)
+      elseif value == 1 then return if1.evaluate(env)
       else assert(false) end
    end
 
