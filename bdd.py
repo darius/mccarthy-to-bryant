@@ -15,8 +15,8 @@ def Implies(p, q): return p(lit1, q)
 class ConstantNode(Node):
     rank = float('Inf')  # Greater than every variable.
     def __init__(self, value):     self.value = value
-    def __call__(self, *branches): return branches[self.value]
     def evaluate(self, env):       return self.value
+    def __call__(self, *branches): return branches[self.value]
 
 lit0, lit1 = the_constants = tuple(map(ConstantNode, range(2)))
 Constant = the_constants.__getitem__
@@ -32,13 +32,13 @@ class ChoiceNode(Node):
         self.rank = rank
         self.branches = branches
         for b in branches: assert rank < b.rank
+    def evaluate(self, env):
+        return self.branches[env[self.rank]].evaluate(env)
     def __call__(self, *branches):
         if optimize: # (optional optimization)
             if len(set(branches)) == 1: return branches[0]
             if branches == the_constants: return self
         return build_choice(self, branches)
-    def evaluate(self, env):
-        return self.branches[env[self.rank]].evaluate(env)
 
 build_node = memoize(ChoiceNode)
 
