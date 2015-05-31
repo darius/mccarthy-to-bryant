@@ -27,7 +27,7 @@ def test_adder(n, add):
     #       symbolically test equivalence with a fancier adder circuit
 
 def ripple_carry_add(A, B, carry):
-    "Compute a+b for 16-bit unsigned numbers."
+    "The simplest adder in logic gates."
     assert len(A) == len(B)
     out = []
     for a, b in zip(A, B):
