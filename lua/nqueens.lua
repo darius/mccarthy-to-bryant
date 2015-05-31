@@ -2,7 +2,7 @@ local dbg = require 'dbg'
 local printf = dbg.printf
 local log = dbg.log
 
-local bdd = require 'bdd2'
+local bdd = require 'bdd3'
 
 local function queen(n, qrow, qcol)
    return n*(qrow-1) + qcol
@@ -87,3 +87,4 @@ test_nqueens(10)
 local post_clock, post_mem = os.clock(), collectgarbage("count")
 print(string.format("%.3f seconds, %.3f kb RAM",
                     post_clock - pre_clock, post_mem - pre_mem))
+-- bdd.report()
