@@ -1,9 +1,8 @@
-"BDDs; or multiway/multiterminal DDs if you change `arity`."
-# Hm, maybe I should separate multiway from multiterminal.
+"BDDs; actually multiway DDs, and multiterminal if you change `num_terminals`."
 
 from utils import memoize
 
-arity = 2
+num_terminals = 2
 
 class Node(object):
     "A BDD node."
@@ -21,7 +20,7 @@ class ConstantNode(Node):
     def evaluate(self, env):       return self.value
     def __call__(self, *branches): return branches[self.value]
 
-lit0, lit1 = the_constants = tuple(map(ConstantNode, range(arity)))
+lit0, lit1 = the_constants = tuple(map(ConstantNode, range(num_terminals)))
 Constant = the_constants.__getitem__
 
 def Variable(rank):
