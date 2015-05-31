@@ -37,6 +37,8 @@ class ChoiceNode(Node):
     def evaluate(self, env):
         return self.branches[env[self.rank]].evaluate(env)
 
+Choice = memoize(ChoiceNode)
+
 @memoize
 def build(node, branches):
     top = min(node.rank, *[b.rank for b in branches])
@@ -47,8 +49,6 @@ def build(node, branches):
 def make_node(rank, branches):
     if len(set(branches)) == 1: return branches[0]
     return Choice(rank, branches)
-
-Choice = memoize(ChoiceNode)
 
 def map_subst(rank, replacement, nodes):
     return [subst(rank, replacement, e) for e in nodes]
