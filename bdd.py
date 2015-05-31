@@ -20,8 +20,9 @@ class ConstantNode(Node):
     def evaluate(self, env):       return self.value
     def __call__(self, *branches): return branches[self.value]
 
-lit0, lit1 = the_constants = tuple(map(ConstantNode, range(num_terminals)))
+the_constants = tuple(map(ConstantNode, range(num_terminals)))
 Constant = the_constants.__getitem__
+lit0, lit1 = the_constants[:2]
 
 def Variable(rank):
     return build_node(rank, the_constants)
