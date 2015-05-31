@@ -36,7 +36,7 @@ def ripple_carry_add(A, B, carry):
     return carry, tuple(out)
 
 def add3(a, b, c):
-    "Compute the lsb and msb of a+b+c."
+    "Compute the msb and lsb of a+b+c."
     c1, s1 = add2(a, b)
     c2, s2 = add2(s1, c)
     return c1 | c2, s2
