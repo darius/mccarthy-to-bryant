@@ -23,8 +23,9 @@ def test_adder(n, add):
                 cov = c_out.evaluate(env)
                 sv = sum(sp.evaluate(env) << p for p, sp in enumerate(Sum))
                 assert (cov << n) + sv == av + bv + civ
-    # TODO: nicer code above
-    #       symbolically test equivalence with a fancier adder circuit
+    # TODO: symbolically test equivalence with a fancier adder circuit
+    #       nicer code above, making it easier to vary the variable ranking
+    #       pick a better ranking of variables (interleaved)
 
 def ripple_carry_add(A, B, carry):
     "The simplest adder in logic gates."
