@@ -1,4 +1,5 @@
-"BDDs; or multiway DDs if you change `arity`."
+"BDDs; or multiway/multiterminal DDs if you change `arity`."
+# Hm, maybe I should separate multiway from multiterminal.
 
 from utils import memoize
 
