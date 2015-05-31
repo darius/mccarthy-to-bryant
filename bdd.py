@@ -22,7 +22,6 @@ lit0, lit1 = the_constants = tuple(map(ConstantNode, range(2)))
 Constant = the_constants.__getitem__
 
 def Variable(rank):
-    assert rank < ConstantNode.rank
     return build_node(rank, the_constants)
 
 optimize = 1
