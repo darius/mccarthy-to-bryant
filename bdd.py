@@ -1,6 +1,8 @@
-"BDDs with global rank and memo-tables."
+"BDDs; or multiway DDs if you change `arity`."
 
 from utils import memoize
+
+arity = 2
 
 class Node(object):
     "A BDD node."
@@ -18,7 +20,7 @@ class ConstantNode(Node):
     def evaluate(self, env):       return self.value
     def __call__(self, *branches): return branches[self.value]
 
-lit0, lit1 = the_constants = tuple(map(ConstantNode, range(2)))
+lit0, lit1 = the_constants = tuple(map(ConstantNode, range(arity)))
 Constant = the_constants.__getitem__
 
 def Variable(rank):
