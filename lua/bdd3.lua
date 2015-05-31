@@ -9,10 +9,6 @@ local log = dbg.log
 
 local optimize = true
 
-local function pp(node)  -- XXX
-   printf("\n")
-end
-
 -- index 0 represents the constant 0; index 1 represents the constant 1.
 local lit0, lit1 = 0, 1
 
@@ -25,6 +21,25 @@ local infinite_rank = 0x7fffffff -- variable rank must be < this
 local ranks = {[lit0] = infinite_rank, [lit1] = infinite_rank}
 local if0s  = {[lit0] = lit0,          [lit1] = lit1}
 local if1s  = {[lit0] = lit0,          [lit1] = lit1}
+
+local function pp(node)  -- XXX
+   local shown = {}
+   local function show(p)
+      assert(p ~= nil)
+      if shown[p] == nil then
+         shown[p] = true
+         if p <= lit1 then
+            printf("%d: %d\n", p, p)
+         else
+            printf("%d: v%d -> %d, %d\n", p, ranks[p], if0s[p], if1s[p])
+            show(if0s[p])
+            show(if1s[p])
+         end
+      end
+   end
+   show(node)
+   printf("\n")
+end
 
 local function dedup(memo, k1, k2, k3)
    local mem1 = memo[k1]; if mem1 == nil then mem1 = {}; memo[k1] = mem1 end
