@@ -13,14 +13,7 @@ import bdd
 
 def test_adder(n, add, interleaved=True):
     "Make an n-bit adder and test it exhaustively."
-    c_in = bdd.Variable(-1)
-    inputs = map(bdd.Variable, range(2*n))
-    if interleaved:
-        A = inputs[0::2]
-        B = inputs[1::2]
-    else:
-        A = inputs[:n]
-        B = inputs[n:]
+    c_in, A, B = make_alu_inputs(n, interleaved)
     S, c_out = add(A, B, c_in)
     for av in range(2**n):
         for bv in range(2**n):
@@ -32,6 +25,17 @@ def test_adder(n, add, interleaved=True):
                 sv = uint_from_bdds(S, env)
                 assert (cov << n) + sv == av + bv + civ
     return 'passed'
+
+def make_alu_inputs(n, interleaved):
+    c_in = bdd.Variable(-1)
+    inputs = map(bdd.Variable, range(2*n))
+    if interleaved:
+        A = inputs[0::2]
+        B = inputs[1::2]
+    else:
+        A = inputs[:n]
+        B = inputs[n:]
+    return c_in, A, B
 
 def env_from_uint(bit_nodes, value):
     return {node.rank: (value >> p) & 1 for p, node in enumerate(bit_nodes)}
