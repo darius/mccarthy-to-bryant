@@ -1,18 +1,27 @@
 """
 Check some adder implementations.
 """
+# TODO: symbolically test equivalence with a fancier adder circuit
+#       rename .rank to .var?
 
 import bdd
 
 ## test_adder(4, ripple_carry_add)
 #. 'passed'
+## test_adder(4, ripple_carry_add, interleaved=False)
+#. 'passed'
 
-def test_adder(n, add):
+def test_adder(n, add, interleaved=True):
     "Make an n-bit adder and test it exhaustively."
     c_in = bdd.Variable(-1)
-    A = map(bdd.Variable, range(0, n))
-    B = map(bdd.Variable, range(n, 2*n))
-    c_out, Sum = add(A, B, c_in) # XXX confusable name
+    inputs = map(bdd.Variable, range(2*n))
+    if interleaved:
+        A = inputs[0::2]
+        B = inputs[1::2]
+    else:
+        A = inputs[:n]
+        B = inputs[n:]
+    S, c_out = add(A, B, c_in)
     for av in range(2**n):
         for bv in range(2**n):
             for civ in 0, 1:
@@ -20,12 +29,9 @@ def test_adder(n, add):
                 env.update(env_from_uint(A, av))
                 env.update(env_from_uint(B, bv))
                 cov = c_out.evaluate(env)
-                sv = uint_from_bdds(Sum, env)
+                sv = uint_from_bdds(S, env)
                 assert (cov << n) + sv == av + bv + civ
     return 'passed'
-    # TODO: symbolically test equivalence with a fancier adder circuit
-    #       pick a better ranking of variables (interleaved)
-    #       rename .rank to .var?
 
 def env_from_uint(bit_nodes, value):
     return {node.rank: (value >> p) & 1 for p, node in enumerate(bit_nodes)}
@@ -36,18 +42,18 @@ def uint_from_bdds(bit_nodes, env):
 def ripple_carry_add(A, B, carry):
     "The simplest adder in logic gates."
     assert len(A) == len(B)
-    out = []
+    S = []
     for a, b in zip(A, B):
-        carry, sum = add3(a, b, carry)
-        out.append(sum)
-    return carry, tuple(out)
+        sum, carry = add3(a, b, carry)
+        S.append(sum)
+    return tuple(S), carry
 
 def add3(a, b, c):
-    "Compute the msb and lsb of a+b+c."
-    c1, s1 = add2(a, b)
-    c2, s2 = add2(s1, c)
-    return c1 | c2, s2
+    "Compute the lsb and msb of a+b+c."
+    s1, c1 = add2(a, b)
+    s2, c2 = add2(s1, c)
+    return s2, c1 | c2
 
 def add2(a, b):
-    "Compute the msb and lsb of a+b."
-    return a & b, a ^ b
+    "Compute the lsb and msb of a+b."
+    return a ^ b, a & b
