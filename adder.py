@@ -30,7 +30,7 @@ def test_equivalent(n, adder1, adder2, interleaved=True):
     S1, c_out1 = adder1(A, B, c_in)
     S2, c_out2 = adder2(A, B, c_in)
     assert len(S1) == len(S2) == len(A)
-    assert bdd.is_valid(bdd.Equiv(c_out1, c_out2))
+    assert bdd.Equiv(c_out1, c_out2) == bdd.lit1
     for s1, s2 in zip(S1, S2):
         assert bdd.Equiv(s1, s2) == bdd.lit1
     return 'passed'
