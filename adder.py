@@ -1,8 +1,6 @@
 """
 Check some adder implementations.
 """
-# TODO: symbolically test equivalence with a fancier adder circuit
-#       rename .rank to .var?
 
 import math
 from utils import memoize
