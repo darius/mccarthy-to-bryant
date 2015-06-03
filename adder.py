@@ -4,12 +4,38 @@ Check some adder implementations.
 # TODO: symbolically test equivalence with a fancier adder circuit
 #       rename .rank to .var?
 
+import math
+from utils import memoize
 import bdd
 
 ## test_adder(4, ripple_carry_add)
 #. 'passed'
 ## test_adder(4, ripple_carry_add, interleaved=False)
 #. 'passed'
+
+## test_adder(1, carry_lookahead_add)
+#. 'passed'
+## test_adder(2, carry_lookahead_add)
+#. 'passed'
+## test_adder(3, carry_lookahead_add)
+#. 'passed'
+## test_adder(4, carry_lookahead_add)
+#. 'passed'
+
+## test_equivalent(1, ripple_carry_add, carry_lookahead_add)
+#. 'passed'
+## test_equivalent(4, ripple_carry_add, carry_lookahead_add)
+#. 'passed'
+
+def test_equivalent(n, adder1, adder2, interleaved=True):
+    c_in, A, B = make_alu_inputs(n, interleaved)
+    S1, c_out1 = adder1(A, B, c_in)
+    S2, c_out2 = adder2(A, B, c_in)
+    assert len(S1) == len(S2) == len(A)
+    assert bdd.is_valid(bdd.Equiv(c_out1, c_out2))
+    for s1, s2 in zip(S1, S2):
+        assert bdd.is_valid(bdd.Equiv(s1, s2))
+    return 'passed'
 
 def test_adder(n, add, interleaved=True):
     "Make an n-bit adder and test it exhaustively."
@@ -23,7 +49,8 @@ def test_adder(n, add, interleaved=True):
                 env.update(env_from_uint(B, bv))
                 cov = c_out.evaluate(env)
                 sv = uint_from_bdds(S, env)
-                assert (cov << n) + sv == av + bv + civ
+                assert (cov << n) + sv == av + bv + civ, ("%d + %d + %d => (%d<<%d) + %d"
+                                                          % (av, bv, civ, cov, n, sv))
     return 'passed'
 
 def make_alu_inputs(n, interleaved):
@@ -61,3 +88,33 @@ def add3(a, b, c):
 def add2(a, b):
     "Compute the lsb and msb of a+b."
     return a ^ b, a & b
+
+
+def carry_lookahead_add(A, B, carry):
+    assert len(A) == len(B)
+
+    @memoize
+    def lookahead(lo, nbits, assume_cin):
+        if nbits == 0:
+            return bdd.Constant(assume_cin)
+        elif nbits == 1:
+            s, c = add2_constant(A[lo], B[lo], assume_cin)
+            return c
+        else:
+            m = preceding_power_of_2(nbits)
+            return lookahead(lo, m, assume_cin)(lookahead(lo+m, nbits-m, 0),
+                                                lookahead(lo+m, nbits-m, 1))
+
+    # The carry at each place.
+    C = [carry(lookahead(0, hi, 0),
+               lookahead(0, hi, 1))
+         for hi in range(len(A)+1)]
+
+    return tuple(a^b^c for a,b,c in zip(A, B, C)), C[-1]
+
+def preceding_power_of_2(n):
+    return 2**int(math.log(n-1, 2))
+
+def add2_constant(a, b, bit):
+    if bit == 0: return add2(a, b)
+    else:        return bdd.Equiv(a, b), a|b
