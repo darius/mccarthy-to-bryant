@@ -4,7 +4,7 @@ Check some adder implementations.
 
 import math
 from utils import memoize
-import bdd
+import dd as bdd
 
 ## test_adder(4, ripple_carry_add)
 #. 'passed'
@@ -23,6 +23,9 @@ import bdd
 ## test_equivalent(1, ripple_carry_add, carry_lookahead_add)
 #. 'passed'
 ## test_equivalent(4, ripple_carry_add, carry_lookahead_add)
+#. 'passed'
+# test_equivalent(12, ripple_carry_add, carry_lookahead_add, interleaved=False)
+## test_equivalent(32, ripple_carry_add, carry_lookahead_add)
 #. 'passed'
 
 def test_equivalent(n, adder1, adder2, interleaved=True):

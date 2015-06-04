@@ -2,7 +2,7 @@
 The N-queens problem as a BDD.
 """
 
-import bdd
+import dd as bdd
 
 ## queens(2)
 #. none
