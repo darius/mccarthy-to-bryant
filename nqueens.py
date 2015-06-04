@@ -2,7 +2,7 @@
 The N-queens problem as a BDD.
 """
 
-import dd as bdd
+import dd
 
 ## queens(2)
 #. none
@@ -13,7 +13,7 @@ import dd as bdd
 #. . Q . .
 
 def queens(n):
-    env = bdd.satisfy(queens_problem(n), 1)
+    env = dd.satisfy(queens_problem(n), 1)
     if env is None:
         print 'none'
     else:
@@ -50,10 +50,10 @@ def place_queen(n, r, c):
 def match(env):
     """Return a BDD that evaluates to 1 just when every variable
     in env has its given value."""
-    tree = bdd.lit1
+    tree = dd.lit1
     for var, value in sorted(env.items(), reverse=True):
-        v = bdd.Variable(var)
-        tree = v(bdd.lit0, tree) if value else v(tree, bdd.lit0)
+        v = dd.Variable(var)
+        tree = v(dd.lit0, tree) if value else v(tree, dd.lit0)
     return tree
 
 def queen(n, r, c):

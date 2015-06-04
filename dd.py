@@ -5,7 +5,7 @@ from utils import memoize
 optimize = True
 
 class Node(object):
-    "A BDD node."
+    "A decision-diagram node."
     __invert__ = lambda self:        self(lit1, lit0)
     __and__    = lambda self, other: self(lit0, other)
     __or__     = lambda self, other: self(other, lit1)

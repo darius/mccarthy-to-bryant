@@ -5,10 +5,10 @@ TODO: compare to http://www.eecs.berkeley.edu/~bh/v3ch2/math.html
 
 import operator
 from peglet import Parser
-import bdd
+import dd
 
 def mk_var(name):
-    return bdd.Variable(enter(name))
+    return dd.Variable(enter(name))
 
 var_names = []
 def enter(name):
@@ -44,8 +44,8 @@ id       = ([A-Za-z_]\w*) _
 _        = (?:\s|#[^\n]*)*
 """
 parse = Parser(grammar,
-               mk_eqv  = bdd.Equiv,
-               mk_impl = bdd.Implies,
+               mk_eqv  = dd.Equiv,
+               mk_impl = dd.Implies,
                mk_and  = operator.and_,
                mk_or   = operator.or_,
                mk_not  = operator.inv,
@@ -53,10 +53,10 @@ parse = Parser(grammar,
 
 def solve(puzzle_text):
     condition, = parse(puzzle_text)
-    if bdd.is_valid(condition):
+    if dd.is_valid(condition):
         print("Valid.")
     else:
-        show(bdd.satisfy(condition, 1))
+        show(dd.satisfy(condition, 1))
 
 def show(opt_env):
     if opt_env is None:

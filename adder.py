@@ -4,7 +4,7 @@ Check some adder implementations.
 
 import math
 from utils import memoize
-import dd as bdd
+import dd
 
 ## test_adder(4, ripple_carry_add)
 #. 'passed'
@@ -33,9 +33,9 @@ def test_equivalent(n, adder1, adder2, interleaved=True):
     S1, c_out1 = adder1(A, B, c_in)
     S2, c_out2 = adder2(A, B, c_in)
     assert len(S1) == len(S2) == len(A)
-    assert bdd.Equiv(c_out1, c_out2) == bdd.lit1
+    assert dd.Equiv(c_out1, c_out2) == dd.lit1
     for s1, s2 in zip(S1, S2):
-        assert bdd.Equiv(s1, s2) == bdd.lit1
+        assert dd.Equiv(s1, s2) == dd.lit1
     return 'passed'
 
 def test_adder(n, add, interleaved=True):
@@ -55,8 +55,8 @@ def test_adder(n, add, interleaved=True):
     return 'passed'
 
 def make_alu_inputs(n, interleaved):
-    c_in = bdd.Variable(-1)
-    inputs = map(bdd.Variable, range(2*n))
+    c_in = dd.Variable(-1)
+    inputs = map(dd.Variable, range(2*n))
     if interleaved:
         A = inputs[0::2]
         B = inputs[1::2]
@@ -97,7 +97,7 @@ def carry_lookahead_add(A, B, carry):
     @memoize
     def lookahead(lo, nbits, assume_cin):
         if nbits == 0:
-            return bdd.Constant(assume_cin)
+            return dd.Constant(assume_cin)
         elif nbits == 1:
             s, c = add2_constant(A[lo], B[lo], assume_cin)
             return c
@@ -118,4 +118,4 @@ def preceding_power_of_2(n):
 
 def add2_constant(a, b, bit):
     if bit == 0: return add2(a, b)
-    else:        return bdd.Equiv(a, b), a|b
+    else:        return dd.Equiv(a, b), a|b
