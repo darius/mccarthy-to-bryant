@@ -46,6 +46,13 @@ local function pack_hash_key(x, y, z)
    local exponent = (x-x1) / 0x400  -- 11 bits
    local mantissa = (yz * 0x400) + x1
    return math.ldexp(mantissa, exponent - 1023)  -- XXX I'm not sure about this
+     -- I mean, does every pair of 52-bit integer mantissa and
+     -- 11-bit integer exponent turn into a unique FP number here?
+     -- Or do signed zeroes or something mess it up?
+     -- Alternative: use only 10 bits for the exponent, 
+     -- and don't go all the way down to -1023. (Put the
+     -- last bit in the sign.)
+     -- Another: require a Lua with 64-bit ints.
 end
 
 local nodes = {[lit0] = pack(infinite_rank, lit0, lit0),
