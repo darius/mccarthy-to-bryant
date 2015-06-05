@@ -2,7 +2,7 @@ local dbg = require 'dbg'
 local printf = dbg.printf
 local log = dbg.log
 
-local bdd = require 'bdd4'
+local bdd = require 'bdd5'
 
 local function queen(n, qrow, qcol)
    return n*(qrow-1) + qcol
