@@ -28,10 +28,11 @@ local function pack(rank, if0, if1)
 end
 
 local function unpack(val)
-   local if1 = val % radix;          assert(0 <= if1)
+   assert(0 <= val)
+   local if1 = val % radix;
    val = (val - if1) / radix
-   local if0 = val % radix;          assert(0 <= if0)
-   local rank = (val - if0) / radix; assert(0 <= rank and rank < rank_radix)
+   local if0 = val % radix;
+   local rank = (val - if0) / radix; assert(rank < rank_radix)
    return rank, if0, if1
 end
 
@@ -110,7 +111,6 @@ end
 local choose
 
 local function do_choose(node, if0, if1)
-   assert(node ~= nil)
    if node <= lit1 then
       if     node == lit0 then return if0
       elseif node == lit1 then return if1
@@ -126,8 +126,6 @@ local function do_choose(node, if0, if1)
 end
 
 local function subst(rank, replacement, node)
-   assert(node ~= nil)
-   assert(replacement ~= nil)
    local node_rank, if0, if1 = unpack(nodes[node])
    if     rank <  node_rank then return node
    elseif rank == node_rank then return do_choose(replacement, if0, if1)
