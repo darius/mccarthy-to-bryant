@@ -1,0 +1,37 @@
+# http://ftp.mcs.anl.gov/pub/ATP_problems/puzzles/carroll/pigs.ver1.clauses
+#
+# 		 The Pigs and Balloons Puzzle
+#
+# (1) All, who neither dance on tight ropes nor eat penny-buns,
+#     are old.
+# (2) Pigs, that are liable to giddiness, are treated with respect.
+# (3) A wise balloonist takes an umbrella with him.
+# (4) No one ought to lunch in public who looks ridiculous and eats
+#     penny-buns.
+# (5) Young creatures, who go up in balloons, are liable to 
+#     giddiness.
+# (6) Fat creatures, who look ridiculous, may lunch in
+#     public, provided that they do not dance on tight ropes.
+# (7) No wise creatures dance on tight ropes, if liable to giddiness.
+# (8) A pig looks ridiculous, carrying an umbrella.
+# (9) All, who do not dance on tight ropes, and who are treated
+#     with respect are fat.
+#     Show that no wise young pigs go up in balloons.
+#
+# -Lewis Carroll, Symbolic Logic, p. 378
+
+(
+  old = ~young,
+  ~(dances_on_tightropes | eats_penny_buns)   => old,
+  pig liable_to_giddiness                     => treated_with_respect,
+  wise balloonist                             => carries_an_umbrella,
+  looks_ridiculous eats_penny_buns            => ~may_lunch_in_public,
+  young balloonist                            => liable_to_giddiness,
+  fat looks_ridiculous ~dances_on_tightropes  => may_lunch_in_public,
+  wise liable_to_giddiness                    => ~dances_on_tightropes,
+  pig carries_an_umbrella                     => looks_ridiculous,
+  ~dances_on_tightropes treated_with_respect  => fat
+)
+=> (
+  wise young pig => ~balloonist
+)

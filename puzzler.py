@@ -77,4 +77,4 @@ def show(opt_env):
 
 if __name__ == '__main__':
     import sys
-    solve(sys.stdin.read())  # (try it on carroll)
+    solve(sys.stdin.read())  # (try it on carroll or wise-pigs)
