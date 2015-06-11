@@ -44,10 +44,9 @@ class LiteralNode(Node):
             yield env
 
 class VariableNode(Node):
-    def __init__(self, name, hi_bound=2):
+    def __init__(self, name):
         assert isinstance(name, str)
         self.name = name
-        self.hi_bound = hi_bound
     def __repr__(self):
         return self.name
     def evaluate(self, env):
@@ -86,10 +85,14 @@ Literal = the_literals.__getitem__
 
 Variable = VariableNode
 
-def Choice(index, if0, if1):    # TODO: *branches instead of if0,if1
-    if   if0 == if1:                return if0
-    elif (if0,if1) == the_literals: return index
-    else:                           return ChoiceNode(index, if0, if1)
+def Choice(index, *branches):
+    if len(set(branches)) == 1:
+        return branches[0]
+    elif all(isinstance(b, LiteralNode) and b.value == i
+             for i, b in enumerate(branches)):
+        return index
+    else:
+        return ChoiceNode(index, *branches)
 
 #Choice = ChoiceNode
 
@@ -126,7 +129,10 @@ def boole_express(variables, table, cleaver=lambda variables, table: 0):
         return Choice(variables[v], *[boole_express(remove(variables, v),
                                                     project(table, v, value),
                                                     cleaver)
-                                      for value in (0, 1)])
+                                      for value in var_range(table, v)])
+
+def var_range(table, v):
+    return range(max(keys[v] for keys in table.keys()) + 1)
 
 def remove(xs, v):
     return xs[:v]+xs[v+1:]
