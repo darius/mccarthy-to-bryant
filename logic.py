@@ -88,21 +88,12 @@ Variable = VariableNode
 def Choice(index, *branches):
     if len(set(branches)) == 1:
         return branches[0]
-    elif all(isinstance(b, LiteralNode) and b.value == i
-             for i, b in enumerate(branches)):
+    elif all(branch is Literal(i) for i, branch in enumerate(branches)):
         return index
     else:
         return ChoiceNode(index, *branches)
 
 #Choice = ChoiceNode
-
-def check(express, names, table):
-    variables = map(Variable, names)
-    tree = express(variables, table)
-    for keys, value in table.items():
-        assert value == tree.evaluate(dict(zip(variables, keys))), \
-           "Mismatch at %r: %r" % (keys, tree)
-    return tree
 
 def naively_express(variables, table):
     tree = lit0 # A value for any omitted rows; it could just as well be `lit1`.
@@ -117,6 +108,14 @@ def match(variables, values):
     for var, value in zip(variables, values):
         tree = (Choice(var, lit0, tree) if value else
                 Choice(var, tree, lit0))
+    return tree
+
+def check(express, names, table):
+    variables = map(Variable, names)
+    tree = express(variables, table)
+    for keys, value in table.items():
+        assert value == tree.evaluate(dict(zip(variables, keys))), \
+           "Mismatch at %r: %r" % (keys, tree)
     return tree
 
 def boole_express(variables, table, cleaver=lambda variables, table: 0):
