@@ -80,8 +80,8 @@ def extend(env, var, value):
     result[var] = value
     return result
 
-lit0, lit1 = the_literals = tuple(map(LiteralNode, (0, 1)))
-Literal = the_literals.__getitem__
+Literal = memoize(LiteralNode)
+lit0, lit1 = Literal(0), Literal(1)
 
 Variable = VariableNode
 
