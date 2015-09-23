@@ -41,6 +41,6 @@ O_nodes = [E.boole_express(XO_variables, {XO_values(grid): value
                                           for grid, value in table.items()})
            for table in O_tables]
 ## sum(node.size() for node in O_nodes)
-#. 2400
+#. 1053
 ## len(E.ChoiceNode._memos)
-#. 956
+#. 620
