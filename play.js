@@ -42,7 +42,7 @@ function update() {
            .data(links, function(d) { return '' + d[0].node.id + ',' + d[1].node.id; });
     edges.exit().remove();
     edges.enter().append('line');
-    edges
+    edges.transition()
         .attr('x1', function(d) { return d[0].pos[0]; })
         .attr('y1', function(d) { return d[0].pos[1]; })
         .attr('x2', function(d) { return d[1].pos[0]; })
@@ -57,6 +57,7 @@ function update() {
             d3.select(this).append('circle').attr('r', 5);
             d3.select(this).append('text').text(d.node.label);
         });
+    vertices = vertices.transition();
     vertices.select('circle')
         .attr('cx', function(d) { return d.pos[0]; })
         .attr('cy', function(d) { return d.pos[1]; });
