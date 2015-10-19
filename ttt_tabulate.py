@@ -34,7 +34,7 @@ def express(variables, table):
     if not table:
         return const0      # (Can you be cleverer here?)
     elif len(table) == 1:
-        return Constant(table.values()[0])
+        return E.Constant(table.values()[0])
     else:
         first_var, rest_vars = variables[0], variables[1:]
         # The new logic: if first_var takes on only one value
@@ -43,7 +43,17 @@ def express(variables, table):
         if len(domain) == 1:
             # ...then just assume it'll take that value in the input.
             value = next(iter(domain))
-            return express(rest_vars, subst_for_first_var(table, value))
+            return express(rest_vars, E.subst_for_first_var(table, value))
         # Otherwise as before.
-        return first_var(express(rest_vars, subst_for_first_var(table, 0)),
-                         express(rest_vars, subst_for_first_var(table, 1)))
+        return first_var(express(rest_vars, E.subst_for_first_var(table, 0)),
+                         express(rest_vars, E.subst_for_first_var(table, 1)))
+## len(E.ChoiceNode._memos)
+#. 1236
+## E.ChoiceNode._memos.clear()
+## O_nodes = [E.express(XO_variables, {XO_values(grid): value for grid, value in table.items()}) for table in O_tables]
+## len(E.ChoiceNode._memos)
+#. 956
+## E.ChoiceNode._memos.clear()
+## O_nodes = [express(XO_variables, {XO_values(grid): value for grid, value in table.items()}) for table in O_tables]
+## len(E.ChoiceNode._memos)
+#. 556
