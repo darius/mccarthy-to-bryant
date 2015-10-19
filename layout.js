@@ -20,7 +20,7 @@ function treeLinks(tree) {
     function walk(node) {
         var i, n = node.children.length;
         for (i = 0; i < n; ++i) {
-            links.push({source: node, target: node.children[i]});
+            links.push({source: node, target: node.children[i], nthborn: i});
             walk(node.children[i]);
         }
     }

@@ -46,6 +46,8 @@ function update() {
     console.log('enter', edges.enter());
     //edges.enter().each(function(d) { console.log('edge enter', d); });
     edges.enter().append('line')
+        .attr('stroke', function(d) { return d.nthborn === 0 ? 'green' : 'black'; })
+        .attr('stroke-dasharray', function(d) { return d.nthborn === 1 ? '5,5' : '5,0'; })
         .attr('x1', function(d) { return d.source.pos[0]; })
         .attr('y1', function(d) { return d.source.pos[1]; })
         .attr('x2', function(d) { return d.target.pos[0]; })
