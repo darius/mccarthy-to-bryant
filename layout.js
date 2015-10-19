@@ -2,10 +2,6 @@ function assert(ok, plaint) {
     if (!ok) throw new Error("Assertion failed: " + plaint);
 }
 
-function children(node) {
-    return [node.index, node.if0, node.if1]; // XXX
-}
-
 function treeNodes(tree) {
     var nodes = [];
     function walk(node) {
