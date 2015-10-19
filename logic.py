@@ -1,7 +1,5 @@
 """
 Propositional logic in terms of decision trees: IF-THEN-ELSE or CASE expressions.
-For simplicity we assume variables all have the same, finite domain: currently
-(0, 1). But I think I'll want to make it 3-way for more-efficient tic-tac-toe.
 """
 
 from utils import memoize
