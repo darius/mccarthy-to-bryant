@@ -39,22 +39,22 @@ function update() {
 
     var edges =
         svg.selectAll('line')
-           .data(links, function(d) { return '' + d[0].node.id + ',' + d[1].node.id; });
+           .data(links, function(d) { return '' + d.source.node.id + ',' + d.target.node.id; });
     //edges.exit().each(function(d) { console.log('edge exit', d); });
     console.log('exit', edges.exit());
     edges.exit().remove();
     console.log('enter', edges.enter());
     //edges.enter().each(function(d) { console.log('edge enter', d); });
     edges.enter().append('line')
-        .attr('x1', function(d) { return d[0].pos[0]; })
-        .attr('y1', function(d) { return d[0].pos[1]; })
-        .attr('x2', function(d) { return d[1].pos[0]; })
-        .attr('y2', function(d) { return d[1].pos[1]; });
+        .attr('x1', function(d) { return d.source.pos[0]; })
+        .attr('y1', function(d) { return d.source.pos[1]; })
+        .attr('x2', function(d) { return d.target.pos[0]; })
+        .attr('y2', function(d) { return d.target.pos[1]; });
     edges.transition()
-        .attr('x1', function(d) { return d[0].pos[0]; })
-        .attr('y1', function(d) { return d[0].pos[1]; })
-        .attr('x2', function(d) { return d[1].pos[0]; })
-        .attr('y2', function(d) { return d[1].pos[1]; })
+        .attr('x1', function(d) { return d.source.pos[0]; })
+        .attr('y1', function(d) { return d.source.pos[1]; })
+        .attr('x2', function(d) { return d.target.pos[0]; })
+        .attr('y2', function(d) { return d.target.pos[1]; })
 
     var vertices = 
         svg.selectAll('g')
