@@ -5,7 +5,7 @@ Creating the tic-tac-toe machine by tabulating max_play.
 
 from collections import Counter
 
-import logic as E; E.ChoiceNode = E.memoize(E.ChoiceNode)
+import nway_logic as E; E.ChoiceNode = E.memoize(E.ChoiceNode)
 import tictactoe as T
 
 def exhaust(grid):
