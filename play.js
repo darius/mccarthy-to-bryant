@@ -40,8 +40,16 @@ function update() {
     var edges =
         svg.selectAll('line')
            .data(links, function(d) { return '' + d[0].node.id + ',' + d[1].node.id; });
+    //edges.exit().each(function(d) { console.log('edge exit', d); });
+    console.log('exit', edges.exit());
     edges.exit().remove();
-    edges.enter().append('line');
+    console.log('enter', edges.enter());
+    //edges.enter().each(function(d) { console.log('edge enter', d); });
+    edges.enter().append('line')
+        .attr('x1', function(d) { return d[0].pos[0]; })
+        .attr('y1', function(d) { return d[0].pos[1]; })
+        .attr('x2', function(d) { return d[1].pos[0]; })
+        .attr('y2', function(d) { return d[1].pos[1]; });
     edges.transition()
         .attr('x1', function(d) { return d[0].pos[0]; })
         .attr('y1', function(d) { return d[0].pos[1]; })
@@ -54,8 +62,14 @@ function update() {
     vertices.exit().remove();
     vertices.enter().append('g')
         .each(function(d) {
-            d3.select(this).append('circle').attr('r', 5);
-            d3.select(this).append('text').text(d.node.label);
+            d3.select(this).append('circle')
+                .attr('r', 5)
+                .attr('cx', function(d) { return d.pos[0]; })
+                .attr('cy', function(d) { return d.pos[1]; });
+            d3.select(this).append('text')
+                .attr('x', function(d) { return d.pos[0] - 5; })
+                .attr('y', function(d) { return d.pos[1] + 25; })
+                .text(function(d) { return d.node.label; });
         });
     vertices = vertices.transition();
     vertices.select('circle')
@@ -64,7 +78,8 @@ function update() {
     //    .attr('fill', 'black')
     vertices.select('text')
         .attr('x', function(d) { return d.pos[0] - 5; })
-        .attr('y', function(d) { return d.pos[1] + 25; });
+        .attr('y', function(d) { return d.pos[1] + 25; })
+        .text(function(d) { return d.node.label; });
 }
 
 update();
@@ -72,3 +87,29 @@ d3.select('#toggle').on('click', function() {
     which_root = 1 - which_root;
     update();
 });
+
+function transit(lhs, rhs) {
+    roots[0] = lhs;
+    roots[1] = rhs;
+    update();
+}
+
+switch (7) {
+           case 0: transit({id: 1, label: "a"},
+                           {id: 4, children: [{id: 1, label: "a"}, {id: 2, label: "0"}, {id: 3, label: "1"}]});
+    break; case 1: transit({id: 1, label: "a"},
+                           {id: 2, children: [{id: 3, label: "b"}, {id: 1, label: "a"}, {id: 4, label: "a"}]});
+    break; case 2: transit({id: 1, label: "a"},
+                           {id: 2, children: [{id: 3, label: "0"}, {id: 1, label: "a"}, {id: 4, label: "b"}]});
+    break; case 3: transit({id: 1, label: "b"},
+                           {id: 2, children: [{id: 3, label: "1"}, {id: 4, label: "a"}, {id: 1, label: "b"}]});
+    break; case 4: transit({id: 1, children: [{id: 2, label: "p"}, {id: 3, label: "a"}, {id: 4, label: "c"}]},
+                           {id: 1, children: [{id: 2, label: "p"}, {id: 3, label: "a"}, {id: 5, children: [{id: 6, label: "p"}, {id: 7, label: "b"}, {id: 4, label: "c"}]}]});
+    break; case 5: transit({id: 1, children: [{id: 2, label: "p"}, {id: 3, label: "a"}, {id: 4, label: "c"}]},
+                           {id: 1, children: [{id: 2, label: "p"}, {id: 5, children: [{id: 7, label: "p"}, {id: 3, label: "a"}, {id: 6, label: "b"}]}, {id: 4, label: "c"}]});
+    break; case 6: transit({id: 1, children: [{id: 2, children: [{id: 3, label: "q"}, {id: 4, label: "p"}, {id: 5, label: "r"}]}, {id: 6, label: "a"}, {id: 7, label: "b"}]},
+                           {id: 1, children: [{id: 3, label: "q"}, {id: 8, children: [{id: 4, label: "p"}, {id: 6, label: "a"}, {id: 7, label: "b"}]}, {id: 9, children: [{id: 5, label: "r"}, {id: 10, label: "a"}, {id: 11, label: "b"}]}]});
+
+    break; case 7: transit({id: 1, children: [{id: 2, label: "q"}, {id: 3, children: [{id: 4, label: "p"}, {id: 5, label: "a"}, {id: 6, label: "b"}]}, {id: 7, children: [{id: 8, label: "p"}, {id: 9, label: "c"}, {id: 10, label: "d"}]}]},
+                           {id: 1, children: [{id: 4, label: "p"}, {id: 3, children: [{id: 2, label: "q"}, {id: 5, label: "a"}, {id: 9, label: "c"}]}, {id: 7, children: [{id: 8, label: "q"}, {id: 6, label: "b"}, {id: 10, label: "d"}]}]});
+}
