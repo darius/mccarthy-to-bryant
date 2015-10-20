@@ -21,18 +21,18 @@ class Node(object):
     def __call__(self, *branches):
         return Choice(self, *branches)
 
-Node.__invert__ = lambda self:        Choice(self, lit1, lit0)
-Node.__and__    = lambda self, other: Choice(self, lit0, other)
-Node.__or__     = lambda self, other: Choice(self, other, lit1)
+Node.__invert__ = lambda self:        Choice(self, const1, const0)
+Node.__and__    = lambda self, other: Choice(self, const0, other)
+Node.__or__     = lambda self, other: Choice(self, other, const1)
 Node.__xor__    = lambda self, other: Choice(self, other, ~other)
 
-def Implies(p, q): return Choice(p, lit1, q)
+def Implies(p, q): return Choice(p, const1, q)
 def Equiv(p, q):   return Choice(p, ~q, q)
 
-## ~lit0 ^ Variable('x')
+## ~const0 ^ Variable('x')
 #. (x `(1 `0` 0)` (1 `x` 0))
 
-class LiteralNode(Node):
+class ConstantNode(Node):
     def __init__(self, value):
         self.value = value
     def __repr__(self):
@@ -80,15 +80,15 @@ def extend(env, var, value):
     result[var] = value
     return result
 
-Literal = memoize(LiteralNode)
-lit0, lit1 = Literal(0), Literal(1)
+Constant = memoize(ConstantNode)
+const0, const1 = Constant(0), Constant(1)
 
 Variable = VariableNode
 
 def Choice(index, *branches):
     if len(set(branches)) == 1:
         return branches[0]
-    elif all(branch is Literal(i) for i, branch in enumerate(branches)):
+    elif all(branch is Constant(i) for i, branch in enumerate(branches)):
         return index
     else:
         return ChoiceNode(index, *branches)
@@ -96,18 +96,18 @@ def Choice(index, *branches):
 #Choice = ChoiceNode
 
 def naively_express(variables, table):
-    tree = lit0 # A value for any omitted rows; it could just as well be `lit1`.
+    tree = const0 # A value for any omitted rows; it could just as well be `const1`.
     for key, value in table.items():
-        tree = Choice(match(variables, key), tree, Literal(value))
+        tree = Choice(match(variables, key), tree, Constant(value))
     return tree
 
 def match(variables, values):
     """Return an expression that evaluates to 1 just when every variable
     has the corresponding value."""
-    tree = lit1
+    tree = const1
     for var, value in zip(variables, values):
-        tree = (Choice(var, lit0, tree) if value else
-                Choice(var, tree, lit0))
+        tree = (Choice(var, const0, tree) if value else
+                Choice(var, tree, const0))
     return tree
 
 def check(express, names, table):
@@ -120,9 +120,9 @@ def check(express, names, table):
 
 def boole_express(variables, table, cleaver=lambda variables, table: 0):
     if not table:
-        return lit0      # Or 1, doesn't matter.
+        return const0      # Or 1, doesn't matter.
     elif len(table) == 1:
-        return Literal(next(iter(table.values())))
+        return Constant(next(iter(table.values())))
     else:
         v = cleaver(variables, table)
         return Choice(variables[v], *[boole_express(remove(variables, v),

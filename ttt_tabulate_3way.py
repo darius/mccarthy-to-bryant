@@ -26,9 +26,9 @@ exhaust(T.empty_grid)
 def boole_express(variables, table, cleaver=lambda variables, table: 0):
     def recur(variables, table, parent):
         if not table:
-            return E.Literal(most_popular(parent.values()))
+            return E.Constant(most_popular(parent.values()))
         elif len(table) == 1:
-            return E.Literal(next(iter(table.values())))
+            return E.Constant(next(iter(table.values())))
         else:
             v = cleaver(variables, table)
             return variables[v](*[recur(E.remove(variables, v),
