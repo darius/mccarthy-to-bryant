@@ -1,4 +1,4 @@
-Code for an article on propositional logic as the language of if-then-else or case expressions.
+Code for ["The language of choice"](https://codewords.recurse.com/issues/four/the-language-of-choice).
 
 logic.py and utils.py go with the first half. Then
 ttt_tabulate.py/ttt_tabule_3way.py. bdd.py goes with the rest.
