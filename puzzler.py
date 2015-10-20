@@ -4,7 +4,7 @@ TODO: compare to http://www.eecs.berkeley.edu/~bh/v3ch2/math.html
 """
 
 import operator
-from peglet import Parser
+from peglet import Parser   # Prerequisite: pip install peglet
 import dd
 
 def mk_var(name):
