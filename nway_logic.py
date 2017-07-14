@@ -1,6 +1,6 @@
 """
 Propositional logic in terms of decision trees: IF-THEN-ELSE or CASE expressions.
-Like the article but for multiway decisions; also, an simplified sketch of the ID3
+Like the article but for multiway decisions; also, n simplified sketch of the ID3
 algorithm.
 """
 
